@@ -1,35 +1,35 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: christian-dev
-  namespace: christian-test
+  name: pair-box
+  namespace: grafana-dev
   labels:
-    app: christian-dev
+    app: pair-box
 spec:
   ports:
   - port: 22
     name: ssh
   clusterIP: None
   selector:
-    app: christian-dev
+    app: pair-box
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: christian-dev
-  namespace: christian-test
+  name: pair-box
+  namespace: grafana-dev
   labels:
-    app: christian-dev
+    app: pair-box
 spec:
-  serviceName: christian-dev
+  serviceName: pair-box
   replicas: 1
   selector:
     matchLabels:
-      app: christian-dev
+      app: pair-box
   template:
     metadata:
       labels:
-        app: christian-dev
+        app: pair-box
     spec:
       containers:
       - name: system
