@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: christian-dev
+  namespace: christian-test
+  labels:
+    app: christian-dev
+spec:
+  ports:
+  - port: 22
+    name: ssh
+  clusterIP: None
+  selector:
+    app: christian-dev
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: christian-dev
+  namespace: christian-test
+  labels:
+    app: christian-dev
+spec:
+  serviceName: christian-dev
+  replicas: 1
+  selector:
+    matchLabels:
+      app: christian-dev
+  template:
+    metadata:
+      labels:
+        app: christian-dev
+    spec:
+      containers:
+      - name: system
+        image: simonswine/dev@sha256:a12195b7254f3b312541d96e268355c38d7f7b316ae306f8b69c9cf8fd10e071
+        ports:
+        - containerPort: 22
+          name: ssh
+        volumeMounts:
+        - name: docker
+          mountPath: /var/lib/docker
+        - name: data
+          mountPath: /nix
+          subPath: nix
+        - name: data
+          mountPath: /home
+          subPath: home
+        - name: data
+          mountPath: /etc/ssh
+          subPath: etc-ssh
+        - name: tmp
+          mountPath: /tmp
+        - name: run
+          mountPath: /run
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+          readOnly: true
+        securityContext:
+          privileged: true
+        resources:
+          limits:
+            memory: "12Gi"
+          requests:
+            cpu: "2"
+            memory: "4Gi"
+      volumes:
+      - name: run
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+      - name: docker
+        emptyDir: {}
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: fast
+      resources:
+        requests:
+          storage: 50Gi
