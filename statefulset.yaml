@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: system
-        image: simonswine/dev@sha256:a12195b7254f3b312541d96e268355c38d7f7b316ae306f8b69c9cf8fd10e071
+        image: simonswine/docker-pairing-environment@sha256:abad24b2bb5dfb6ce46ca2435f87f49601c7f1d8ed0f8bc7caf676eb6950d91a
         ports:
         - containerPort: 22
           name: ssh
