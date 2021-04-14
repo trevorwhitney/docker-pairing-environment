@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: pair-box
-  namespace: grafana-dev
+  name: twhitney-pair-box
+  namespace: development
   labels:
     app: pair-box
 spec:
@@ -16,12 +16,12 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: pair-box
-  namespace: grafana-dev
+  name: twhitney-pair-box
+  namespace: development
   labels:
     app: pair-box
 spec:
-  serviceName: pair-box
+  serviceName: twhitney-pair-box
   replicas: 1
   selector:
     matchLabels:
@@ -41,14 +41,11 @@ spec:
         - name: docker
           mountPath: /var/lib/docker
         - name: data
-          mountPath: /nix
-          subPath: nix
-        - name: data
           mountPath: /home
           subPath: home
         - name: data
           mountPath: /etc/ssh
-          subPath: etc-ssh
+          subPath: ssh
         - name: tmp
           mountPath: /tmp
         - name: run
